@@ -1,0 +1,10 @@
+import React from "react";
+const App = () => {
+  return (
+    <div className="bg-blue-500 text-white text-2xl p-8">
+      Tailwind is working!
+    </div>
+  )
+}
+
+export default App
