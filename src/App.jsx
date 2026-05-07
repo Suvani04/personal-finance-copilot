@@ -1,9 +1,11 @@
-import React from "react";
+import { Routes, Route } from 'react-router-dom'
+import Login from './pages/Login'
+
 const App = () => {
   return (
-    <div className="bg-blue-500 text-white text-2xl p-8">
-      Tailwind is working!
-    </div>
+    <Routes>
+      <Route path="/" element={<Login />} />
+    </Routes>
   )
 }
 
