@@ -73,6 +73,7 @@ const Register =() =>{
             <img className="w-full h-full object-cover rounded-2xl  " src="https://static.vecteezy.com/system/resources/previews/014/462/169/original/economy-and-finance-background-financial-business-statistics-with-candlesticks-and-bar-chart-vector.jpg" alt="" />
             
             </div>
+            
 
         </div>
     </div>

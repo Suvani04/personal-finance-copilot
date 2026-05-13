@@ -1,6 +1,9 @@
 import React from "react";
+import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Login =() =>{
+  const navigate = useNavigate()
   return(
     <div className=" bg-gray-100 min-h-screen flex items-center justify-center">
         <div className="bg-white flex rounded-2xl shadow-lg w-3/4 h-[600px]">
@@ -39,6 +42,7 @@ const Login =() =>{
                 </a>
                 </div>
                 <button 
+                onClick={() =>navigate('/upload')}
                 className="w-full bg-blue-600
                 text-white font-semibold py-3 rounded-lg mt-6  hover:bg-blue-700 cursor-pointer
                 font-playfair">Log In</button>
@@ -80,7 +84,9 @@ const Login =() =>{
             </div>
 
         </div>
-        <Link to="/register"> Register</Link>
+        <Link to="/register"></Link>
+        <Link to="/upload"></Link>
+       
     </div>
 
   )
