@@ -87,6 +87,7 @@ const Login =() =>{
         <Link to="/register"></Link>
         <Link to="/upload"></Link>
        
+       
     </div>
 
   )
