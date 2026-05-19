@@ -1,95 +1,108 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import api from "../utils/api";
 
-const Login =() =>{
-  const navigate = useNavigate()
-  return(
-    <div className=" bg-gray-100 min-h-screen flex items-center justify-center">
-        <div className="bg-white flex rounded-2xl shadow-lg w-3/4 h-[600px]">
-            <div className="w-3/5 p-12">
-                <h1 className="text-blue-600 font-semibold font-playfair text-2xl size-10">Trackfi.ai</h1>
-                <h2 className="font-bold font-playfair text-3xl mt-4">Welcome back !</h2>
-                <h3 className="text-gray-500 text-xs mt-1">Enter to get unlimited access to data and information.</h3>
-                <label className="font-playfair mt-6 block ">
-                  Email 
-                  <span className="text-red-500"> *</span>
-                </label>
-                <input type="email" 
-                placeholder="Enter your mail" 
-                className="w-full border text-sm border-gray-300 rounded-lg p-3 mt-1 focus:outline-none focus:border-gray-400" />
-                <label className="font-playfair mt-1 block">
-                  Password
-                  <span className="text-red-500"> *</span>
-                </label>
-                <input type="password" 
-                placeholder="Enter password" 
-                className=" w-full border border-gray-300 rounded-lg p-3 mt-1 focus:outline-none focus:border-gray-400"/>
+const Login = () => {
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-                <div className="flex items-center justify-between mt-4">
-                  <div>
-                    <input type="checkbox" 
-                    id="remember" 
-                    className="w-4 h-4 accent-blue-600 cursor-pointer border border-gray-300"/>
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
-                    <label htmlFor="remember " className="ml-2 text-sm cursor-pointer  ">
-                    Remember me
-                    </label>
-                  </div>
-                
-                <a href="#" className=" text-blue-500 text-sm">
-                  Forgot your password ?
-                </a>
-                </div>
-                <button 
-                onClick={() =>navigate('/upload')}
-                className="w-full bg-blue-600
-                text-white font-semibold py-3 rounded-lg mt-6  hover:bg-blue-700 cursor-pointer
-                font-playfair">Log In</button>
+  const handleSubmit = async () => {
+    setError("");
+    setLoading(true);
+    try {
+      const res = await api.post("/auth/login", {
+        email: formData.email,
+        password: formData.password,
+      });
+      localStorage.setItem("token", res.data.token);
+      localStorage.setItem("user", JSON.stringify(res.data.user));
+      navigate("/dashboard");
+    } catch (err) {
+      setError(err.response?.data?.message || "Login failed!");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-                <div className="flex items-center mt-2">
-                  <hr className=" flex-1 border-gray-300" />
-                  <span className="mx-3 text-gray-400 text-sm">
-                    Or, Login with
-                  </span>
-                  <hr className=" flex-1 border-gray-300" />
-                </div>
-                <button className="w-full border border-gray-300 
-                rounded-lg py-3 mt-3 flex items-center justify-center gap-3 
-                hover:bg-gray-50 cursor-pointer">
-                  <img src="https://freelogopng.com/images/all_img/1657952440google-logo-png-transparent.png"
-                  className="w-5 h-5" alt="Google" />
-                  <span className="font-playfair text-gray-800">
-                    Sign up with Google
-                  </span>
-                </button>
-                <p className=" text-center text-gray-600 text-sm mt-2"> 
-                  Don't have an account ?{" "}
-                  <a href="/register"
-                  className="text-blue-500 hover:underline ">
-                    Register here
-                  </a>
-                </p>
-                
+  return (
+    <div className="bg-gray-100 min-h-screen flex items-center justify-center">
+      <div className="bg-white flex rounded-2xl shadow-lg w-3/4 h-[600px]">
+        <div className="w-3/5 p-12">
+          <h1 className="text-blue-600 font-semibold font-playfair text-2xl size-10">Trackfi.ai</h1>
+          <h2 className="font-bold font-playfair text-3xl mt-4">Welcome back!</h2>
+          <h3 className="text-gray-500 text-xs mt-1">Enter to get unlimited access to data and information.</h3>
 
+          {error && (
+            <p className="text-red-500 text-sm mt-2 bg-red-50 p-2 rounded-lg">{error}</p>
+          )}
+
+          <label className="font-playfair mt-6 block">
+            Email <span className="text-red-500">*</span>
+          </label>
+          <input type="email" name="email" placeholder="Enter your mail"
+            value={formData.email} onChange={handleChange}
+            className="w-full border text-sm border-gray-300 rounded-lg p-3 mt-1 focus:outline-none focus:border-gray-400"/>
+
+          <label className="font-playfair mt-1 block">
+            Password <span className="text-red-500">*</span>
+          </label>
+          <input type="password" name="password" placeholder="Enter password"
+            value={formData.password} onChange={handleChange}
+            className="w-full border border-gray-300 rounded-lg p-3 mt-1 focus:outline-none focus:border-gray-400"/>
+
+          <div className="flex items-center justify-between mt-4">
+            <div>
+              <input type="checkbox" id="remember"
+                className="w-4 h-4 accent-blue-600 cursor-pointer border border-gray-300"/>
+              <label htmlFor="remember" className="ml-2 text-sm cursor-pointer">Remember me</label>
             </div>
+            <a href="#" className="text-blue-500 text-sm">Forgot your password?</a>
+          </div>
 
-            <div className="w-1/2 p-6 rounded-r-2xl overflow-hidden ml-4 flex flex-col relative ">
-            <div className="absolute top-10 left-0 right-0 z-10 text-center px-4">
-              <h1 className="text-white  text-sm text-center  ">Track it.Understand it.Grow it</h1>
-              <p className="text-white font-bold text-xl mt-2  text-center">Automation builds wealth while you focus on life </p>
-            </div>
-            <img className="w-full h-full object-cover rounded-2xl  " src="https://static.vecteezy.com/system/resources/previews/014/462/169/original/economy-and-finance-background-financial-business-statistics-with-candlesticks-and-bar-chart-vector.jpg" alt="" />
-            
-            </div>
+          <button onClick={handleSubmit} disabled={loading}
+            className="w-full bg-blue-600 text-white font-semibold py-3 rounded-lg mt-6 hover:bg-blue-700 cursor-pointer font-playfair disabled:opacity-60">
+            {loading ? "Logging in..." : "Log In"}
+          </button>
 
+          <div className="flex items-center mt-2">
+            <hr className="flex-1 border-gray-300"/>
+            <span className="mx-3 text-gray-400 text-sm">Or, Login with</span>
+            <hr className="flex-1 border-gray-300"/>
+          </div>
+
+          <button className="w-full border border-gray-300 rounded-lg py-3 mt-3 flex items-center justify-center gap-3 hover:bg-gray-50 cursor-pointer">
+            <img src="https://freelogopng.com/images/all_img/1657952440google-logo-png-transparent.png"
+              className="w-5 h-5" alt="Google"/>
+            <span className="font-playfair text-gray-800">Sign up with Google</span>
+          </button>
+
+          <p className="text-center text-gray-600 text-sm mt-2">
+            Don't have an account?{" "}
+            <a href="/register" className="text-blue-500 hover:underline">Register here</a>
+          </p>
         </div>
-        <Link to="/register"></Link>
-        <Link to="/upload"></Link>
-       
-       
-    </div>
 
-  )
-}
-export default Login
+        <div className="w-1/2 p-6 rounded-r-2xl overflow-hidden ml-4 flex flex-col relative">
+          <div className="absolute top-10 left-0 right-0 z-10 text-center px-4">
+            <h1 className="text-white text-sm text-center">Track it.Understand it.Grow it</h1>
+            <p className="text-white font-bold text-xl mt-2 text-center">Automation builds wealth while you focus on life</p>
+          </div>
+          <img className="w-full h-full object-cover rounded-2xl"
+            src="https://static.vecteezy.com/system/resources/previews/014/462/169/original/economy-and-finance-background-financial-business-statistics-with-candlesticks-and-bar-chart-vector.jpg"
+            alt=""/>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Login;
